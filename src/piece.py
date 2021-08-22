@@ -1,4 +1,3 @@
-
 class Piece:
     """
     A class to represent a piece in chess
