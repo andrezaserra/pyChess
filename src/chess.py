@@ -11,7 +11,7 @@ class Chess:
         self.white_ghost_piece = None
         self.black_ghost_piece = None
 
-    def promotion(self, pos):
+    def promotion(self, position):
         pawn = None
         while pawn is None:
             promote = input("Promote pawn to [Q, R, N, B, P(or nothing)]: ")
@@ -28,7 +28,7 @@ class Chess:
                     pawn = piece.Bishop(True)
                 elif promote == 'P' or promote == '':
                     pawn = piece.Pawn(True)
-        self.board.board[pos[0]][pos[1]] = pawn
+        self.board.board[position[0]][position[1]] = pawn
 
     def move(self, start, to):
 
