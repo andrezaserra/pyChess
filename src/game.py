@@ -1,20 +1,5 @@
 import chess
-
-
-def check_for_promotion_pawns(game):
-    is_white_player_turn = game.white_player_turn
-    i = 0
-    while i < 8:
-        black_pawn_is_on_eighth_rank = game.board.board[0][i] is not None and game.board.board[0][i].name == "\u265F"
-        white_pawn_is_on_eighth_rank = game.board.board[7][i] is not None and game.board.board[7][i].name == "\u265F"
-
-        if not is_white_player_turn and black_pawn_is_on_eighth_rank:
-            game.promotion((0, i))
-            break
-        elif is_white_player_turn and white_pawn_is_on_eighth_rank:
-            game.promotion((7, i))
-            break
-        i += 1
+import checker
 
 
 def translate(entry):
@@ -59,6 +44,6 @@ class Game:
             game.move(start, to)
 
             # check for promotion pawns
-            check_for_promotion_pawns(game)
+            checker.check_for_promotion_pawns(game)
 
             game.board.print_board()
