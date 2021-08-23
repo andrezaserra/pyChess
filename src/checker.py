@@ -41,7 +41,7 @@ def check_diagonal_path(board, start, to):
     i = start[0] + line_iterator
     j = start[1] + column_iterator
 
-    while i < to[0] if line_iterator is 1 else i > to[0]:
+    while i < to[0] if line_iterator == 1 else i > to[0]:
         if board.board[i][j] is not None:
             print(alert.blocked_path)
             # print("At: " + str((i, j)))
