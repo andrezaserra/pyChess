@@ -1,2 +1,5 @@
 blocked_path = "There's a piece in the path."
 incorrect_path: str = "This piece does not move in this pattern."
+invalid_move = "Invalid move"
+pawn_diagonal_move = "Cannot move diagonally unless taking."
+pawn_twice_move = "Cannot move forward twice if not first move."

@@ -95,10 +95,6 @@ class Queen(Piece):
 
 class King(Piece):
     def __init__(self, color, first_move=True):
-        """
-        Same as base class Piece, except `first_move` is used to check
-        if this king can castle.
-        """
         super().__init__(color)
         self.name = "\u265A"
         self.first_move = first_move
@@ -272,53 +268,89 @@ class Pawn(Piece):
         self.first_move = True
 
     def is_valid_move(self, board, start, to):
-        if self.color:
-            # diagonal move
-            if start[0] == to[0] + 1 and (start[1] == to[1] + 1 or start[1] == to[1] - 1):
-                if board.board[to[0]][to[1]] != None:
+        the_pawn_is_white = self.color
+        is_a_straight_move = start[1] == to[1]
+        there_is_a_piece_to_taken = board.board[to[0]][to[1]] is not None
+
+        if the_pawn_is_white:
+
+            white_diagonal_move = start[0] == to[0] + 1 and (start[1] == to[1] + 1 or start[1] == to[1] - 1)
+
+            if white_diagonal_move:
+
+                if there_is_a_piece_to_taken:
                     self.first_move = False
                     return True
-                print("Cannot move diagonally unless taking.")
+
+                print(alert.pawn_diagonal_move)
                 return False
 
-            # vertical move
-            if start[1] == to[1]:
-                if (start[0] - to[0] == 2 and self.first_move) or (start[0] - to[0] == 1):
-                    for i in range(start[0] - 1, to[0] - 1, -1):
-                        if board.board[i][start[1]] != None:
+            if is_a_straight_move:
+
+                is_a_double_move = start[0] - to[0] == 2 and self.first_move
+                is_a_basic_move = start[0] - to[0] == 1
+
+                if is_a_double_move or is_a_basic_move:
+                    traveled_lines = range(start[0] - 1, to[0] - 1, -1)
+
+                    for i in traveled_lines:
+                        there_is_a_piece_in_the_path = board.board[i][start[1]] is not None
+                        if there_is_a_piece_in_the_path:
                             print(alert.blocked_path)
                             return False
-                    # insert a GhostPawn
-                    if start[0] - to[0] == 2:
-                        board.board[start[0] - 1][start[1]] = GhostPawn(self.color)
-                        board.white_ghost_piece = (start[0] - 1, start[1])
+
+                    if is_a_double_move:
+                        board.board[start[0]-1][start[1]] = GhostPawn(self.color)
+                        # board.white_ghost_piece = (start[0] - 1, start[1])
+
                     self.first_move = False
                     return True
-                print("Invalid move" + " or " + "Cannot move forward twice if not first move.")
+
+                print(alert.invalid_move + " or " + alert.pawn_twice_move)
                 return False
+
             print(alert.incorrect_path)
             return False
 
         else:
-            if start[0] == to[0] - 1 and (start[1] == to[1] - 1 or start[1] == to[1] + 1):
-                if board.board[to[0]][to[1]] != None:
+
+            black_diagonal_move = start[0] == to[0] - 1 and (start[1] == to[1] - 1 or start[1] == to[1] + 1)
+
+            if black_diagonal_move:
+
+                if there_is_a_piece_to_taken:
                     self.first_move = False
                     return True
-                print(alert.blocked_path)
+
+                print(alert.pawn_diagonal_move)
                 return False
-            if start[1] == to[1]:
-                if (to[0] - start[0] == 2 and self.first_move) or (to[0] - start[0] == 1):
-                    for i in range(start[0] + 1, to[0] + 1):
-                        if board.board[i][start[1]] != None:
+
+            if is_a_straight_move:
+
+                is_a_double_move = to[0] - start[0] == 2 and self.first_move
+                is_a_basic_move = to[0] - start[0] == 1
+
+                if is_a_double_move or is_a_basic_move:
+
+                    traveled_lines = range(start[0]+1, to[0]+1)
+
+                    for i in traveled_lines:
+
+                        there_is_a_piece_in_the_path = board.board[i][start[1]] is not None
+
+                        if there_is_a_piece_in_the_path:
                             print(alert.blocked_path)
                             return False
-                    # insert a GhostPawn
-                    if to[0] - start[0] == 2:
-                        board.board[start[0] + 1][start[1]] = GhostPawn(self.color)
-                        board.black_ghost_piece = (start[0] + 1, start[1])
+
+                    if is_a_double_move:
+                        board.board[start[0]+1][start[1]] = GhostPawn(self.color)
+                        # board.black_ghost_piece = (start[0] + 1, start[1])
+
                     self.first_move = False
                     return True
-                print("Invalid move" + " or " + "Cannot move forward twice if not first move.")
+
+                print(alert.invalid_move + " or " + alert.pawn_twice_move)
                 return False
+
             print(alert.incorrect_path)
             return False
