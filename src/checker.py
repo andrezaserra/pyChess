@@ -3,7 +3,6 @@ import alert
 
 # ok
 def check_straight_paths(board, start, to):
-
     keep_same_line = start[0] == to[0]
 
     if keep_same_line:
@@ -31,7 +30,6 @@ def check_straight_paths(board, start, to):
 
 # ok
 def check_diagonal_path(board, start, to):
-
     move_to_up = to[0] - start[0] > 0
     move_to_right = to[1] - start[1] > 0
 
@@ -52,8 +50,9 @@ def check_diagonal_path(board, start, to):
     return True
 
 
+# ok
 def check_for_promotion_pawns(game):
-    is_white_player_turn = game.white_player_turn
+    is_white_player_turn = game.is_white_player_turn
     i = 0
     while i < 8:
         black_pawn_is_on_eighth_rank = game.board.board[0][i] is not None and game.board.board[0][i].name == "\u265F"
@@ -68,110 +67,182 @@ def check_for_promotion_pawns(game):
         i += 1
 
 
-def check_knight(color, board, pos):
-    """
-    Check if there is a knight of the opposite `color` at
-    position `pos` on board `board`.
+# returns true if it find a threat in 'position_to_check'
+def check_for_opponent_knight(my_color, board, start, check_right, check_up):
 
-    color : bool
-        True if white
+    check_to_black_side = check_up
+    check_to_right_side = check_right
 
-    board : Board
-        Representation of the current chess board
+    i = start[0] + 2 if check_up else start[0] - 2
+    j = start[1] + 1 if check_right else start[1] + 1
 
-    pos : tup
-        Indices to check if there's is a knight
+    if 0 < i < 7 and 0 < j < 7:
+        square_to_check = board.board[i][j]
+        exists_piece = square_to_check is not None
 
-    Precondition `pos` is a valid position on the board.
-    """
-    piece = board.board[pos[0]][pos[1]]
-    if piece != None and piece.color != color and piece.name == 'N':
-        return False
-    return True
+        if exists_piece:
 
+            piece = square_to_check
+            piece_is_a_opponent_knight = piece.color != my_color and piece.name == "\u265E"
 
-def check_diag_castle(color, board, start, to):
-    """
-    Checks the diagonal path from `start` (non-inclusive) to `to` (inclusive)
-    on board `board` for any threats from the opposite `color`
-
-    color : bool
-        True if white
-
-    board : Board
-        Representation of the current chess board
-
-    start : tup
-        Starting point of the diagonal path
-
-    to : tup
-        Ending point of the diagonal path
-
-    Precondition: `start` and `to` are valid positions on the board
-    """
-
-    if abs(start[0] - to[0]) != abs(start[1] - to[1]):
-        print(alert.incorrect_path)
-        return False
-
-    x_pos = 1 if to[0] - start[0] > 0 else -1
-    y_pos = 1 if to[1] - start[1] > 0 else -1
-
-    i = start[0] + x_pos
-    j = start[1] + y_pos
-
-    exists_piece = board.board[i][j] != None
-    if exists_piece and (board.board[i][j].name == 'P' or board.board[i][j].name == 'K') and \
-            board.board[i][j].color != color:
-        return False
-
-    while (i <= to[0] if x_pos == 1 else i >= to[0]):
-        if exists_piece and board.board[i][j].color != color:
-            if board.board[i][j].name in ['B', 'Q']:
-                return False
-            else:
+            if piece_is_a_opponent_knight:
                 return True
-        if exists_piece and board.board[i][j].color == color:
-            return True
-        i += x_pos
-        j += y_pos
-        exists_piece = board.board[i][j] != None
 
-    return True
+    i = start[0] + 1 if check_up else start[0] - 1
+    j = start[1] + 2 if check_right else start[1] + 2
 
+    if 0 < i < 7 and 0 < j < 7:
+        square_to_check = board.board[i][j]
+        exists_piece = square_to_check is not None
 
-def check_updown_castle(color, board, start, to):
-    """
-    Checks if there are any threats from the opposite `color` from `start` (non-inclusive)
-    to `to` (inclusive) on board `board`.
+        if exists_piece:
 
-    color : bool
-        True if white's turn
+            piece = square_to_check
+            piece_is_a_opponent_knight = piece.color != my_color and piece.name == "\u265E"
 
-    board : Board
-        Representation of the current board
-
-    start : tup
-        Start location of vertical path
-
-    to : tup
-        End location of vertical path
-    """
-
-    x_pos = 1 if to[0] - start[0] > 0 else -1
-    i = start[0] + x_pos
-
-    front_piece = board[i][start[1]]
-    if front_piece != None and front_piece.name == 'K' and front_piece.color != color:
-        return False
-
-    while (i <= to[0] if x_pos == 1 else i >= to[0]):
-        if board.board[i][start[1]] != None and board.board[i][start[1]].color != color:
-            if board.board[i][start[1]].name in ['R', 'Q']:
-                return False
-            else:
+            if piece_is_a_opponent_knight:
                 return True
-        if board.board[i][start[1]] != None and board.board[i][start[1]].color == color:
-            return True
 
-    return True
+    return False
+
+
+# returns true if it find a threat on the piece's straight path to the end of the board
+def check_for_opponent_in_straight(my_color, board, start, check_right, check_up):
+    check_to_black_side = check_up
+    check_to_right_side = check_right
+
+    line_iterator = 1 if check_to_black_side else -1
+    column_iterator = 1 if check_to_right_side else -1
+
+    i = start[0] + line_iterator
+    j = start[1] + column_iterator
+
+    if 0 < i < 7 and 0 < j < 7:
+
+        front_square = board.board[i][start[1]]
+        exists_front_piece = front_square is not None
+
+        side_square = board.board[start[1]][j]
+        exists_side_piece = side_square is not None
+
+        if exists_front_piece:
+            front_piece = front_square
+
+            the_piece_is_opponent_king = front_piece.name == "\u265A" and front_piece.color != my_color
+            the_piece_is_opponent_rook_or_queen = front_piece.color != my_color and front_piece.name in ["\u265c", "\u265B"]
+
+            if front_piece.color != my_color and (the_piece_is_opponent_king or the_piece_is_opponent_rook_or_queen):
+                print("there is a " + str(front_piece.name) + "in the path")
+                return True
+
+        while 0 < i < 7 and 0 < j < 7:
+            if exists_front_piece:
+
+                front_piece = front_square
+                the_piece_is_opponent_rook_or_queen = front_piece.color != my_color and front_piece.name in ["\u265c", "\u265B"]
+
+                if the_piece_is_opponent_rook_or_queen:
+                    return True
+
+            i += line_iterator
+
+            front_square = board.board[i][start[1]]
+            exists_front_piece = front_square is not None
+
+        if exists_side_piece:
+            side_piece = side_square
+
+            the_piece_is_opponent_king = side_piece.name == "\u265A" and side_piece.color != my_color
+            the_piece_is_opponent_rook_or_queen = side_piece.color != my_color and side_piece.name in ["\u265c", "\u265B"]
+
+            if side_piece.color != my_color and (the_piece_is_opponent_king or the_piece_is_opponent_rook_or_queen):
+                print("there is a " + str(side_piece.name) + "in the path")
+                return True
+
+        while 0 < i < 7 and 0 < j < 7:
+            if exists_side_piece:
+
+                side_piece = side_square
+                the_piece_is_opponent_rook_or_queen = side_piece.color != my_color and side_piece.name in ["\u265c", "\u265B"]
+
+                if the_piece_is_opponent_rook_or_queen:
+                    return True
+
+            j += column_iterator
+
+            side_square = board.board[start[1]][j]
+            exists_side_piece = side_square is not None
+
+    return False
+
+
+# returns true if it find a threat on the piece's diagonal path to the end of the board
+def check_for_opponent_in_diagonal(my_color, board, start, check_right, check_up):
+
+    check_to_black_side = check_up
+    check_to_right_side = check_right
+
+    line_iterator = 1 if check_to_black_side else -1
+    column_iterator = 1 if check_to_right_side else -1
+
+    i = start[0] + line_iterator
+    j = start[1] + column_iterator
+
+    if 0 < i < 7 and 0 < j < 7:
+        square_to_check = board.board[i][j]
+
+        if square_to_check is not None:
+            piece = square_to_check
+            the_piece_is_pawn = piece.name == "\u265F"
+            the_piece_is_king = piece.name == "\u265A"
+            the_piece_is_queen = piece.name == "\u265B"
+
+            if (the_piece_is_pawn or the_piece_is_king or the_piece_is_queen) and piece.color != my_color:
+                print("threat in diagonal: " + str(piece.name))
+                return True
+
+        while 0 < i < 7 and 0 < j < 7:
+
+            if square_to_check is not None:
+                piece = square_to_check
+                the_piece_is_bishop = piece.name == "\u265D"
+                the_piece_is_queen = piece.name == "\u265B"
+
+                if (the_piece_is_bishop or the_piece_is_queen) and piece.color != my_color:
+                    print("threat in diagonal: " + str(piece.name))
+                    return True
+                elif piece.color == my_color:
+                    return False
+
+            i += line_iterator
+            j += column_iterator
+
+            square_to_check = board.board[i][j]
+            exists_piece = square_to_check is not None
+
+    return False
+
+
+def check_if_king_is_in_check(king_position, king_color, board):
+    checking_diagonals = check_for_opponent_in_diagonal(king_color, board, king_position, True, True) or \
+                         check_for_opponent_in_diagonal(king_color, board, king_position, True, False) or \
+                         check_for_opponent_in_diagonal(king_color, board, king_position, False, True) or \
+                         check_for_opponent_in_diagonal(king_color, board, king_position, False, False)
+
+    checking_straights = check_for_opponent_in_straight(king_color, board, king_position, True, True) or \
+                         check_for_opponent_in_straight(king_color, board, king_position, True, False) or \
+                         check_for_opponent_in_straight(king_color, board, king_position, False, True) or \
+                         check_for_opponent_in_straight(king_color, board, king_position, False, False)
+
+    checking_knights = check_for_opponent_knight(king_color, board, king_position, True, True) or \
+                       check_for_opponent_knight(king_color, board, king_position, True, False) or \
+                       check_for_opponent_knight(king_color, board, king_position, False, True) or \
+                       check_for_opponent_knight(king_color, board, king_position, False, False)
+
+    the_king_is_in_check = checking_diagonals or checking_straights or checking_knights
+
+    if the_king_is_in_check:
+        return True
+
+    return False
+

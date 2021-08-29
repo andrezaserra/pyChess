@@ -7,6 +7,9 @@ class Board:
 
         self.board = []
 
+        self.white_ghost_piece = None
+        self.black_ghost_piece = None
+
         # Board set-up clean
         for i in range(8):
             self.board.append([None] * 8)
@@ -32,6 +35,7 @@ class Board:
         self.board[0][5] = piece.Bishop(False)
         self.board[0][6] = piece.Knight(False)
         self.board[0][7] = piece.Rook(False)
+
         for i in range(8):
             self.board[1][i] = piece.Pawn(False)
 
@@ -48,14 +52,18 @@ class Board:
         print(columns_string)
 
         for i in range(len(self.board)):
+
             lines_string = legend_line[i] + "|"
+
             for j in self.board[i]:
-                if j is None or j.name == 'GP':
+                # if j is None or j.name == 'GP':
+                if j is None:
                     lines_string += "   |"
                 elif len(j.name) == 2:
                     lines_string += (" " + str(j) + "|")
                 else:
                     lines_string += (" " + str(j) + " |")
+
             print(lines_string + legend_line[i])
 
         print(columns_string)

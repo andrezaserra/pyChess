@@ -14,6 +14,7 @@ def translate(entry):
             return None
         column_legend = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7}
         return 8 - row, column_legend[col]
+
     except:
         print(entry + "is not in the format '[number][letter]'")
         return None
@@ -26,7 +27,7 @@ class Game:
         game.board.print_board()
 
         while True:
-            if not game.white_player_turn:
+            if not game.is_white_player_turn:
                 print("Black player's turn:")
             else:
                 print("White player's turn:")
