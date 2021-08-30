@@ -1,7 +1,6 @@
 import alert
 
 
-# ok
 def check_straight_path(board, start, to):
     keep_same_line = start[0] == to[0]
 
@@ -28,7 +27,6 @@ def check_straight_path(board, start, to):
         return True
 
 
-# ok
 def check_diagonal_path(board, start, to):
     move_to_up = to[0] - start[0] > 0
     move_to_right = to[1] - start[1] > 0
@@ -42,7 +40,6 @@ def check_diagonal_path(board, start, to):
     while i < to[0] if line_iterator == 1 else i > to[0]:
         if board.board[i][j] is not None:
             print(alert.blocked_path)
-            # print("At: " + str((i, j)))
             return False
 
         i += line_iterator
@@ -50,7 +47,6 @@ def check_diagonal_path(board, start, to):
     return True
 
 
-# ok
 def check_for_promotion_pawns(game):
     is_white_player_turn = game.is_white_player_turn
     i = 0
@@ -69,7 +65,6 @@ def check_for_promotion_pawns(game):
 
 # returns true if it find a threat in 'position_to_check'
 def check_for_opponent_knight(my_color, board, start, check_right, check_up):
-
     check_to_black_side = check_up
     check_to_right_side = check_right
 
@@ -108,7 +103,6 @@ def check_for_opponent_knight(my_color, board, start, check_right, check_up):
 
 # returns true if it find a threat on the piece's straight path to the end of the board
 def check_for_opponent_in_straight(my_color, board, start, check_right, check_up):
-
     check_to_black_side = check_up
     check_to_right_side = check_right
 
@@ -132,7 +126,6 @@ def check_for_opponent_in_straight(my_color, board, start, check_right, check_up
             the_piece_is_opponent_rook_or_queen = front_piece.color != my_color and front_piece.name in ["\u265c", "\u265B"]
 
             if front_piece.color != my_color and (the_piece_is_opponent_king or the_piece_is_opponent_rook_or_queen):
-                # print("there is a " + str(front_piece.name) + "in the path")
                 return True
 
         while 0 <= i <= 7 and 0 <= j <= 7:
@@ -246,4 +239,3 @@ def check_if_king_is_in_check(king_position, king_color, board):
             if checking_knights:
                 return True
         return False
-

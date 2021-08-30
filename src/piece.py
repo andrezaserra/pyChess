@@ -2,7 +2,6 @@ import checker
 import alert
 
 
-# ok
 class Piece:
     def __init__(self, color):
         self.name = ""
@@ -21,7 +20,6 @@ class Piece:
             return '\033[94m' + self.name + '\033[0m'
 
 
-# ok
 class Rook(Piece):
     def __init__(self, color, is_first_move=True):
         super().__init__(color)
@@ -33,13 +31,12 @@ class Rook(Piece):
         keep_same_column = start[1] == to[1]
 
         if keep_same_line or keep_same_column:
-            return checker.check_straight_paths(board, start, to)
+            return checker.check_straight_path(board, start, to)
 
         print(alert.incorrect_path)
         return False
 
 
-# ok
 class Knight(Piece):
     def __init__(self, color):
         super().__init__(color)
@@ -56,7 +53,6 @@ class Knight(Piece):
         return False
 
 
-# ok
 class Bishop(Piece):
     def __init__(self, color):
         super().__init__(color)
@@ -72,7 +68,6 @@ class Bishop(Piece):
         return checker.check_diagonal_path(board, start, to)
 
 
-# ok
 class Queen(Piece):
     def __init__(self, color):
         super().__init__(color)
@@ -87,7 +82,7 @@ class Queen(Piece):
             return checker.check_diagonal_path(board, start, to)
 
         elif is_a_straight_move:
-            return checker.check_straight_paths(board, start, to)
+            return checker.check_straight_path(board, start, to)
 
         print(alert.incorrect_path)
         return False

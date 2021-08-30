@@ -44,7 +44,6 @@ class Game:
 
             game.move(start, to)
 
-            # check for promotion pawns
             checker.check_for_promotion_pawns(game)
 
             game.board.print_board()

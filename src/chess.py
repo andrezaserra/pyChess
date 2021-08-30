@@ -1,6 +1,6 @@
+import alert
 import board
 import piece
-import alert
 
 
 class Chess:
