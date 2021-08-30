@@ -123,7 +123,8 @@ def check_for_opponent_in_straight(my_color, board, start, check_right, check_up
             front_piece = front_square
 
             the_piece_is_opponent_king = front_piece.name == "\u265A" and front_piece.color != my_color
-            the_piece_is_opponent_rook_or_queen = front_piece.color != my_color and front_piece.name in ["\u265c", "\u265B"]
+            the_piece_is_opponent_rook_or_queen = front_piece.color != my_color and front_piece.name in ["\u265c",
+                                                                                                         "\u265B"]
 
             if front_piece.color != my_color and (the_piece_is_opponent_king or the_piece_is_opponent_rook_or_queen):
                 return True
@@ -131,7 +132,8 @@ def check_for_opponent_in_straight(my_color, board, start, check_right, check_up
         while 0 <= i <= 7 and 0 <= j <= 7:
             if exists_front_piece:
                 front_piece = front_square
-                the_piece_is_opponent_rook_or_queen = front_piece.color != my_color and front_piece.name in ["\u265c", "\u265B"]
+                the_piece_is_opponent_rook_or_queen = front_piece.color != my_color and front_piece.name in ["\u265c",
+                                                                                                             "\u265B"]
 
                 if the_piece_is_opponent_rook_or_queen:
                     return True
@@ -145,7 +147,8 @@ def check_for_opponent_in_straight(my_color, board, start, check_right, check_up
             side_piece = side_square
 
             the_piece_is_opponent_king = side_piece.name == "\u265A" and side_piece.color != my_color
-            the_piece_is_opponent_rook_or_queen = side_piece.color != my_color and side_piece.name in ["\u265c", "\u265B"]
+            the_piece_is_opponent_rook_or_queen = side_piece.color != my_color and side_piece.name in ["\u265c",
+                                                                                                       "\u265B"]
 
             if side_piece.color != my_color and (the_piece_is_opponent_king or the_piece_is_opponent_rook_or_queen):
                 print("there is a " + str(side_piece.name) + "in the path" + str(i) + str(j))
@@ -155,7 +158,8 @@ def check_for_opponent_in_straight(my_color, board, start, check_right, check_up
             if exists_side_piece:
 
                 side_piece = side_square
-                the_piece_is_opponent_rook_or_queen = side_piece.color != my_color and side_piece.name in ["\u265c", "\u265B"]
+                the_piece_is_opponent_rook_or_queen = side_piece.color != my_color and side_piece.name in ["\u265c",
+                                                                                                           "\u265B"]
 
                 if the_piece_is_opponent_rook_or_queen:
                     return True
@@ -238,4 +242,17 @@ def check_if_king_is_in_check(king_position, king_color, board):
 
             if checking_knights:
                 return True
+        return False
+
+
+def check_if_the_move_is_a_checkmate(my_color, to, board):
+    if board.board[to[0]][to[1]] is not None:
+        piece_that_will_taken = board.board[to[0]][to[1]]
+        print(str(piece_that_will_taken))
+        the_move_ends_in_a_opponent_king = piece_that_will_taken.name == "\u265A" and piece_that_will_taken.color != my_color
+
+        if the_move_ends_in_a_opponent_king:
+            return True
+
+    else:
         return False

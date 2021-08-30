@@ -27,7 +27,10 @@ class Game:
         game.board.print_board()
 
         while True:
-            if not game.is_white_player_turn:
+
+            is_white_player_turn = game.is_white_player_turn
+
+            if not is_white_player_turn:
                 print("Black player's turn:")
             else:
                 print("White player's turn:")
@@ -42,7 +45,14 @@ class Game:
             if start is None or to is None:
                 continue
 
-            game.move(start, to)
+            is_a_checkmate = checker.check_if_the_move_is_a_checkmate(is_white_player_turn, to, game.board)
+            move = game.move(start, to)
+
+            if is_a_checkmate:
+                game.board.print_board()
+                print("CHECKMATE!")
+                print("White Player won!") if not game.is_white_player_turn else print("Black Player won!")
+                break
 
             checker.check_for_promotion_pawns(game)
 
