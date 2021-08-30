@@ -16,7 +16,7 @@ The tests were done manually and the files with the test case entries are in the
 * You can increase PyCharm terminal font in `File > Settings > Editor > Color Scheme > Console Font`. We recommend **JetBrains Mono** font and **size 33** to make the game look like this:
 
 
-<img src="/home/acbse/Imagens/chess.png" width="1000"/>
+<img src="https://github.com/andrezaserra/pyChess/blob/main/chess.png" width="1000"/>
 
 ## Starting the Game
 1. Clone this repository
