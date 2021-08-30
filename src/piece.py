@@ -108,7 +108,15 @@ class King(Piece):
         if is_a_white_castling and is_to_the_right:
 
             king_is_in_check = checker.check_if_king_is_in_check(start, True, board)
+
+            if king_is_in_check:
+                print(alert.king_is_in_check)
+                return False
+
             king_will_be_in_check = checker.check_if_king_is_in_check(to, True, board)
+
+            if king_will_be_in_check:
+                print(alert.king_will_be_in_check)
 
             if not king_is_in_check and not king_will_be_in_check:
                 board.board[to[0]][to[1]] = King(True, False)
@@ -117,16 +125,8 @@ class King(Piece):
                 board.board[7][7] = None
                 return True
 
-            elif king_is_in_check:
-                print(alert.king_is_in_check)
-                return False
-
-            elif king_will_be_in_check:
-                print(alert.king_will_be_in_check)
-                return False
-
         # White castling to the left
-        if is_a_white_castling and not is_to_the_right:
+        elif is_a_white_castling and not is_to_the_right:
             king_is_in_check = checker.check_if_king_is_in_check(start, True, board)
             king_will_be_in_check = checker.check_if_king_is_in_check(to, True, board)
 
@@ -146,7 +146,7 @@ class King(Piece):
                 return False
 
         # Black castling to the right
-        if not is_a_white_castling and is_to_the_right:
+        elif not is_a_white_castling and is_to_the_right:
             king_is_in_check = checker.check_if_king_is_in_check(start, False, board)
             king_will_be_in_check = checker.check_if_king_is_in_check(to, False, board)
 
@@ -166,8 +166,9 @@ class King(Piece):
                 return False
 
         # Black castling to the left
-        if not is_a_white_castling and not is_to_the_right:
+        elif not is_a_white_castling and not is_to_the_right:
             king_is_in_check = checker.check_if_king_is_in_check(start, False, board)
+
             king_will_be_in_check = checker.check_if_king_is_in_check(to, False, board)
 
             if not king_will_be_in_check and not king_will_be_in_check:
@@ -184,8 +185,9 @@ class King(Piece):
             elif king_will_be_in_check:
                 print(alert.king_will_be_in_check)
                 return False
-        print(alert.incorrect_path)
-        return False
+        else:
+            print(alert.incorrect_path)
+            return False
 
     def is_valid_move(self, board, start, to):
 
@@ -196,13 +198,14 @@ class King(Piece):
             is_a_castling_to_the_right = to[1] - start[1] > 0
             return self.do_castling(board, start, to, is_a_castling_to_the_right)
 
-        if abs(start[0] - to[0]) == 1 or start[0] - to[0] == 0:
+        elif abs(start[0] - to[0]) == 1 or start[0] - to[0] == 0:
             if start[1] - to[1] == 0 or abs(start[1] - to[1]) == 1:
                 self.first_move = False
                 return True
 
-        print(alert.incorrect_path)
-        return False
+        else:
+            print(alert.incorrect_path)
+            return False
 
 
 class GhostPawn(Piece):
